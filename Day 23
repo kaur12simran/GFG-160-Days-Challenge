@@ -1,0 +1,68 @@
+//{ Driver Code Starts
+import java.io.*;
+import java.util.*;
+
+class Sorting {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine());
+        for (int g = 0; g < t; g++) {
+            String[] str = (br.readLine()).trim().split(" ");
+            int arr[] = new int[str.length];
+            for (int i = 0; i < str.length; i++) arr[i] = Integer.parseInt(str[i]);
+            System.out.println(new Solution().inversionCount(arr));
+            System.out.println("~");
+        }
+    }
+}
+// } Driver Code Ends
+
+
+// User function Template for Java
+
+class Solution {
+    // Function to count inversions in the array.
+    static int inversionCount(int arr[]) {
+        // Your Code Here
+        
+        return mergeSortAndCount(arr, 0, arr.length - 1);
+    }
+    
+    static int mergeSortAndCount(int arr[], int left, int right){
+        
+        int inv_count = 0;
+        if(left < right){
+            int mid = (left + right) / 2;
+            
+            inv_count += mergeSortAndCount(arr, left, mid);
+            inv_count += mergeSortAndCount(arr, mid + 1, right);
+            inv_count += merge(arr, left, mid, right);
+        }
+        return inv_count;
+    }
+    
+    static int merge(int arr[], int left, int mid, int right){
+        int[] leftArray = Arrays.copyOfRange(arr, left, mid + 1);
+        int[] rightArray = Arrays.copyOfRange(arr, mid + 1, right + 1);
+        
+        int i = 0, j = 0, k = left, inv_count = 0;
+        
+        while(i < leftArray.length && j < rightArray.length){
+            if(leftArray[i] <= rightArray[j]){
+                arr[k++] = leftArray[i++];
+            } else{
+                arr[k++] = rightArray[j++];
+                inv_count += (leftArray.length - i);
+            }
+        }
+        
+        while(i < leftArray.length){
+            arr[k++] = leftArray[i++];
+        }
+        while(j < rightArray.length){
+            arr[k++] = rightArray[j++];
+        }
+        
+        return inv_count;
+    }
+}
