@@ -1,0 +1,26 @@
+// User function Template for Java
+
+class Solution {
+    // Function to count the number of possible triangles.
+    static int countTriangles(int arr[]) {
+        // code here
+        Arrays.sort(arr);
+        int count = 0;
+        int n = arr.length;
+        
+        for(int k = 0; k < n; k++) {
+            int left = 0;
+            int right = k - 1;
+            
+            while(left < right) {
+                if(arr[left] + arr[right] > arr[k]) {
+                    count += (right - left);
+                    right--;
+                } else {
+                    left++;
+                }
+            }
+        }
+        return count;
+    }
+}
