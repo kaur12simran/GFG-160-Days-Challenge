@@ -1,0 +1,71 @@
+class LRUCache {
+
+        // code here
+        class Node{
+            int key, value;
+            Node prev, next;
+            Node(int k, int v) {
+                key = k;
+                value = v;
+            }
+        }
+        
+        private int capacity;
+        private Map<Integer, Node> map;
+        private Node head, tail;
+        
+        LRUCache(int cap) {
+            capacity = cap;
+            map = new HashMap<>();
+            head = new Node(0, 0);
+            tail = new Node(0, 0);
+            head.next = tail;
+            tail.prev = head;
+    
+    }
+
+    public int get(int key) {
+
+        
+        // your code here
+        if(!map.containsKey(key)) return -1;
+        
+        Node node = map.get(key);
+        remove(node);
+        insertAtEnd(node);
+        return node.value;
+    }
+
+        
+    public void put(int key, int value) {
+        // your code here
+        
+        if(map.containsKey(key)) {
+            Node node = map.get(key);
+            node.value = value;
+            remove(node);
+            insertAtEnd(node);
+        }else {
+            
+            if(map.size() == capacity) {
+                map.remove(head.next.key);
+                remove(head.next);
+            }
+            Node newNode = new Node(key, value);
+            insertAtEnd(newNode);
+            map.put(key, newNode);
+        }
+    }
+    
+    private void remove(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+    
+    private void insertAtEnd(Node node) {
+        node.prev = tail.prev;
+        node.next = tail;
+        tail.prev.next = node;
+        tail.prev = node;
+    }
+}
