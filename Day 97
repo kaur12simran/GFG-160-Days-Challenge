@@ -1,0 +1,49 @@
+/*class Node
+{
+    int data;
+    Node next;
+
+    Node(int key)
+    {
+        data = key;
+        next = null;
+    }
+}
+*/
+
+// arr is an array of Nodes of the heads of linked lists
+
+class Solution {
+    
+    static class CompareNodes implements Comparator<Node> {
+        public int compare(Node a, Node b) {
+            return a.data - b.data;
+        }
+    }
+    // Function to merge K sorted linked list.
+    Node mergeKLists(List<Node> arr) {
+        
+        PriorityQueue<Node> pq = new PriorityQueue<>(new CompareNodes());
+        
+        for(Node head : arr) {
+        if(head != null) {
+            pq.add(head);
+        }
+    }
+    
+    Node dummy = new Node(0);
+    Node tail = dummy;
+    
+    while (!pq.isEmpty()) {
+        Node curr = pq.poll();
+        tail.next = curr;
+        tail = tail.next;
+        
+        if(curr.next != null) {
+            pq.add(curr.next);
+        }
+    }
+    
+    return dummy.next;
+}
+}
