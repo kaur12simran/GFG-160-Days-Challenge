@@ -1,0 +1,34 @@
+class Solution {
+    public ArrayList<Double> getMedian(int[] arr) {
+        // code here
+        ArrayList<Double> result = new ArrayList<>();
+        
+        PriorityQueue<Integer> left = new PriorityQueue<>(Collections.reverseOrder());
+        
+        PriorityQueue<Integer> right = new PriorityQueue<>();
+        
+        for(int num : arr) {
+            
+            if(left.isEmpty() || num <= left.peek()) {
+                left.offer(num);
+            } else {
+                right.offer(num);
+            }
+            
+            if(left.size() > right.size() + 1) {
+                right.offer(left.poll());
+            } else if (right.size() > left.size()) {
+                left.offer(right.poll());
+            }
+            
+            if(left.size() == right.size()) {
+                double median = (left.peek() + right.peek()) / 2.0;
+                result.add(median);
+            } else {
+                result.add((double) left.peek());
+            }
+        }
+        
+        return result;
+    }
+}
