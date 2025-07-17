@@ -1,0 +1,43 @@
+class Solution {
+    public ArrayList<Integer> longestSubarray(int[] arr, int x) {
+        // code here
+      int n = arr.length;
+      int start = 0, maxLen = 0, bestStart = 0;
+      
+      Deque<Integer> maxDeque = new LinkedList<>();
+      Deque<Integer> minDeque = new LinkedList<>();
+      
+      for(int end = 0; end < n; end++) {
+          while(!maxDeque.isEmpty() && arr[end] > maxDeque.peekLast()) {
+              maxDeque.pollLast();
+          }
+          maxDeque.addLast(arr[end]);
+          
+          while(!minDeque.isEmpty() && arr[end] < minDeque.peekLast()) {
+              minDeque.pollLast();
+          }
+          minDeque.addLast(arr[end]);
+          
+          while(!maxDeque.isEmpty() && !minDeque.isEmpty() && maxDeque.peekFirst() - minDeque.peekFirst() > x) {
+              if(arr[start] == maxDeque.peekFirst()) {
+                  maxDeque.pollFirst();
+              }
+              if(arr[start] == minDeque.peekFirst()) {
+                  minDeque.pollFirst();
+              }
+              start++;
+          }
+          
+          if(end - start + 1 > maxLen) {
+              maxLen = end - start + 1;
+              bestStart = start;
+          }
+      }
+      
+      ArrayList<Integer> result = new ArrayList<>();
+      for(int i = bestStart; i < bestStart + maxLen; i++) {
+          result.add(arr[i]);
+      }
+      return result;
+    }
+}
