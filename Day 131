@@ -1,0 +1,52 @@
+// User function Template for Java
+class Solution {
+    static int[][][] dp;
+    
+    static int solve(String s, int i, int j, boolean isTrue) {
+        if(i > j) return 0;
+        if(i == j) {
+            if(isTrue) return s.charAt(i) == 'T' ? 1 : 0;
+            else return s.charAt(i) == 'F' ? 1 : 0;
+        }
+        
+        int t = isTrue ? 1 : 0;
+        if(dp[i][j][t] != -1) return dp[i][j][t];
+        
+        int ways = 0;
+        
+        for(int k = i + 1; k < j; k += 2) {
+            char op = s.charAt(k);
+            
+            int lt = solve(s, i, k - 1, true);
+            int lf = solve(s, i, k - 1, false);
+            int rt = solve(s, k + 1, j, true);
+            int rf = solve(s, k + 1, j, false);
+            
+            if(op == '&') {
+                if(isTrue) ways += lt * rt;
+                else ways += lt * rf + lf * rt + lf * rf;
+            }
+            else if (op == '|') {
+                if(isTrue) ways += lt * rt + lt * rf + lf * rt;
+                else ways += lf * rf;
+            }
+            else if(op == '^') {
+                if(isTrue) ways += lt * rf + lf * rt;
+                else ways += lt * rt + lf * rf;
+            }
+        }
+        
+        dp[i][j][t] = ways;
+        return ways;
+    }
+    static int countWays(String s) {
+        // code here
+        int n = s.length();
+        dp = new int[n][n][2];
+        for(int[][] arr : dp)
+        for(int[] row : arr)
+        java.util.Arrays.fill(row, -1);
+        
+        return solve(s, 0, n - 1, true);
+    }
+}
